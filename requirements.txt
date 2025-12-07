@@ -1,0 +1,14 @@
+Flask
+Flask-SocketIO
+PyQt5
+qrcode
+python-socketio
+requests
+Jinja2
+eventlet
+opencv-python
+mss
+pygetwindow
+pyautogui
+python-pptx
+
