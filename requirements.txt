@@ -11,4 +11,4 @@ mss
 pygetwindow
 pyautogui
 python-pptx
-
+google-genai
