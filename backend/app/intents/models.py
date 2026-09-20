@@ -1,4 +1,7 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+
+
+MAX_INTENT_TEXT_LENGTH = 2000
 
 
 class IntentResult(BaseModel):
@@ -9,4 +12,12 @@ class IntentResult(BaseModel):
 
 
 class IntentRequest(BaseModel):
-    text: str = Field(min_length=1, max_length=2000)
+    text: str = Field(min_length=1, max_length=MAX_INTENT_TEXT_LENGTH)
+
+    @field_validator("text")
+    @classmethod
+    def reject_blank_text(cls, value: str) -> str:
+        normalized = " ".join(value.split())
+        if not normalized:
+            raise ValueError("text must contain non-whitespace characters")
+        return normalized
