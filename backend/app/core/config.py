@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import json
 import os
 
@@ -44,7 +44,7 @@ class Settings:
     nim_timeout_seconds: float = 30.0
     nim_temperature: float = 0.2
     nim_max_tokens: int = 1024
-    nim_specialist_models: dict[str, str] = None
+    nim_specialist_models: dict[str, str] = field(default_factory=dict)
 
     @classmethod
     def from_env(cls) -> "Settings":
