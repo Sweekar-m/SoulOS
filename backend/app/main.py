@@ -1,8 +1,14 @@
 from fastapi import FastAPI
 
+from backend.app.api.v1.intents import router as intents_router
+from backend.app.api.v1.router import router as api_router
+from backend.app.core.config import settings
+
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="SoulOS Backend", version="0.1.0")
+    app = FastAPI(title="SoulOS Backend", version=settings.version)
+    app.include_router(api_router, prefix="/api/v1")
+    app.include_router(intents_router, prefix="/api/v1")
     return app
 
 
