@@ -11,10 +11,14 @@ class IntentService:
     def classify(self, text: str) -> IntentResult:
         normalized = " ".join(text.strip().split())
         intent, confidence = self.classifier.predict(normalized)
+
         if confidence < CONFIDENCE_THRESHOLD:
             intent = "unknown"
+
         entities = extract_entities(normalized, intent)
-        requires_confirmation = intent in DESTRUCTIVE_INTENTS and confidence < 0.85
+        requires_confirmation = (
+            intent in DESTRUCTIVE_INTENTS and confidence < 0.85
+        )
         return IntentResult(
             intent=intent,
             confidence=confidence,
