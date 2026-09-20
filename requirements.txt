@@ -12,3 +12,7 @@ pygetwindow
 pyautogui
 python-pptx
 google-genai
+fastapi
+uvicorn[standard]
+pydantic
+pytest
