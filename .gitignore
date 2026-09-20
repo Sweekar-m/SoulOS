@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Local configuration
+.env
+*.local
+access_code.txt
+
+# Node/Tauri
+node_modules/
+dist/
+target/
+apps/desktop/.vite/
