@@ -1,0 +1,17 @@
+[project]
+name = "souls-backend"
+version = "0.1.0"
+description = "Local FastAPI orchestration service for SoulOS"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.116,<1",
+  "uvicorn[standard]>=0.35,<1",
+  "pydantic>=2.11,<3",
+  "httpx>=0.28,<1",
+  "scikit-learn>=1.7,<2",
+]
+[project.optional-dependencies]
+test = ["pytest>=8,<9", "pytest-asyncio>=1,<2", "httpx>=0.28,<1"]
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".."]
