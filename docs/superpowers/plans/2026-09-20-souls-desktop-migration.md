@@ -104,12 +104,12 @@
 - `GET /api/v1/models` lists configured models without exposing credentials.
 - `GET /api/v1/models/health` reports provider availability.
 
-- [ ] **Step 1: Write mocked NIM client tests** for successful generation, timeout, HTTP error, malformed response, and missing credentials.
-- [ ] **Step 2: Implement an OpenAI-compatible NIM client using `httpx`, with explicit timeouts and response validation.** Do not hard-code model IDs; configure them through environment variables.
-- [ ] **Step 3: Implement intent-aware model routing.** General chat and information generation default to the configured NVIDIA NIM model; specialist models can be selected by intent configuration.
-- [ ] **Step 4: Add model listing and health endpoints.**
-- [ ] **Step 5: Run all LLM tests with mocked network calls.**
-- [ ] **Step 6: Commit** `feat: add NVIDIA NIM gateway and model routing`.
+- [x] **Step 1: Write mocked NIM client tests** for successful generation, timeout, HTTP error, malformed response, and missing credentials.
+- [x] **Step 2: Implement an OpenAI-compatible NIM client using `httpx`, with explicit timeouts and response validation.** Do not hard-code model IDs; configure them through environment variables.
+- [x] **Step 3: Implement intent-aware model routing.** General chat and information generation default to the configured NVIDIA NIM model; specialist models can be selected by intent configuration.
+- [x] **Step 4: Add model listing and health endpoints.**
+- [x] **Step 5: Run all LLM tests with mocked network calls.**
+- [x] **Step 6: Commit** `feat: add NVIDIA NIM gateway and model routing`. The implementation is split into focused commits with tests and CI in this session.
 
 ### Task 4: Build the Tool Runtime and API Surface
 
