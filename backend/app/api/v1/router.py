@@ -1,11 +1,11 @@
-from typing import Any
-
 from fastapi import APIRouter
 from pydantic import BaseModel
 
 from backend.app.core.config import settings
 from backend.app.llm.models import ModelHealth
 from backend.app.llm.nim_client import NimClient
+from backend.app.api.v1.intents import router as intents_router
+from backend.app.api.v1.tools import router as tools_router
 
 router = APIRouter()
 
@@ -63,3 +63,7 @@ def list_models() -> ModelCatalog:
 @router.get("/models/health", response_model=ModelHealth, tags=["models"])
 def models_health() -> ModelHealth:
     return _nim_client.health()
+
+
+router.include_router(intents_router)
+router.include_router(tools_router)
