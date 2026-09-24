@@ -13,21 +13,40 @@ jobs:
     name: Backend tests
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
     steps:
       - name: Checkout
         uses: actions/checkout@v5
-
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
-
       - name: Install backend dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install             "fastapi>=0.116,<1"             "uvicorn[standard]>=0.35,<1"             "pydantic>=2.11,<3"             "httpx>=0.28,<1"             "scikit-learn>=1.7,<2"             "pytest>=8,<9"             "pytest-asyncio>=1,<2"
-
+          python -m pip install "fastapi>=0.116,<1" "uvicorn[standard]>=0.35,<1" "pydantic>=2.11,<3" "httpx>=0.28,<1" "scikit-learn>=1.7,<2" "pytest>=8,<9" "pytest-asyncio>=1,<2"
       - name: Run backend tests
         run: python -m pytest backend/tests -q
+
+  desktop:
+    name: Desktop frontend checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/desktop/package.json
+      - name: Install frontend dependencies
+        working-directory: apps/desktop
+        run: npm install
+      - name: Typecheck and build
+        working-directory: apps/desktop
+        run: npm run build
+      - name: Run frontend tests
+        working-directory: apps/desktop
+        run: npm test
