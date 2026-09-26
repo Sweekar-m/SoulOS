@@ -1,7 +1,8 @@
 from fastapi import APIRouter, HTTPException, status
 
-from backend.app.tools.runtime import registry
+from backend.app.tools.audit import audit_log
 from backend.app.tools.schemas import ToolExecutionRequest, ToolExecutionResponse
+from backend.app.tools.service import execute_registered, registry
 
 router = APIRouter(prefix="/tools", tags=["tools"])
 
@@ -11,23 +12,21 @@ def list_tools() -> dict:
     return {"tools": registry.metadata()}
 
 
+@router.get("/activity")
+def tool_activity(limit: int = 25) -> dict:
+    return {"events": audit_log.recent(limit)}
+
+
 @router.post("/execute", response_model=ToolExecutionResponse)
 def execute_tool(request: ToolExecutionRequest) -> ToolExecutionResponse:
     try:
-        tool = registry.get(request.name)
+        result = execute_registered(request.name, request.arguments, request.confirmed)
     except KeyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-
-    if tool.destructive and not request.confirmed:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="tool execution requires explicit confirmation",
-        )
-
-    try:
-        arguments = tool.validate(request.arguments)
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc)) from exc
 
-    result = tool.execute(arguments)
-    return ToolExecutionResponse(name=tool.name, result=result.model_dump())
+    if not result.success and result.error == "explicit confirmation required":
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=result.error)
+
+    return ToolExecutionResponse(name=request.name, result=result.model_dump())
