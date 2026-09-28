@@ -14,6 +14,9 @@ All application routes are versioned under `/api/v1`.
 | `POST /memory/retrieve` | Retrieve session memory |
 | `POST /sessions` | Create a session |
 | `GET /sessions/{session_id}` | Fetch a session |
-| `POST /chat` | Run intent → routing → generation orchestration |
+| `GET /conversations/{session_id}` | Fetch conversation history |
+| `POST /conversations/{session_id}/messages` | Append a validated conversation message |
+| `DELETE /conversations/{session_id}` | Clear conversation history |
+| `POST /chat` | Run intent → routing → generation orchestration and persist the conversation |
 
-Tool execution is schema-validated and destructive tools require explicit confirmation. Provider credentials are configuration-only and are not returned by API responses.
+Conversation history is local to the running service and is scoped by session ID. Tool execution is schema-validated and destructive tools require explicit confirmation. Provider credentials are configuration-only and are not returned by API responses.
