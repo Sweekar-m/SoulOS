@@ -12,3 +12,14 @@ export type ChatResponse = {
   response: string;
   tool_events: Array<Record<string, unknown>>;
 };
+
+export type ConversationMessage = {
+  role: "user" | "assistant" | "system";
+  content: string;
+  created_at: string;
+};
+
+export type Conversation = {
+  session_id: string;
+  messages: ConversationMessage[];
+};
