@@ -1,4 +1,4 @@
-import type { ChatResponse, Conversation, Health } from "./types";
+import type { ChatResponse, Conversation, Health, ModelCatalog } from "./types";
 
 const apiBase = (import.meta.env.VITE_SOULOS_API_URL ?? "http://127.0.0.1:8000/api/v1").replace(/\/$/, "");
 
@@ -14,6 +14,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const api = {
   health: () => request<Health>("/health"),
+  models: () => request<ModelCatalog>("/models"),
   chat: (message: string, sessionId?: string) =>
     request<ChatResponse>("/chat", {
       method: "POST",
