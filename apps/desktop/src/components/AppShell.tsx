@@ -15,7 +15,7 @@ export function AppShell() {
   const [active, setActive] = useState<"Chat" | "Tools" | "Memory" | "Settings">("Chat");
   const [message, setMessage] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
-  const [apiUrl, setApiUrl] = useState(import.meta.env.VITE_SOULOS_API_URL ?? "http://127.0.0.1:8000/api/v1");
+  const apiUrl = import.meta.env.VITE_SOULOS_API_URL ?? "http://127.0.0.1:8000/api/v1";
   const { health, error: healthError } = useHealth();
   const { models } = useModels();
   const { history, reply, busy, error, send, reset } = useChat();
@@ -56,7 +56,7 @@ export function AppShell() {
         </>}
         {active === "Tools" && <ToolActivity events={toolEvents} />}
         {active === "Memory" && <section className="panel"><div className="panel-title">Memory</div><p>Session memory is managed by the local FastAPI service.</p></section>}
-        {active === "Settings" && <Settings apiUrl={apiUrl} onApiUrlChange={setApiUrl} />}
+        {active === "Settings" && <Settings apiUrl={apiUrl} />}
       </section>
       <CommandPalette onCommand={command} />
     </main>
