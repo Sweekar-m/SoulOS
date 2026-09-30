@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ToolResult(BaseModel):
@@ -12,7 +12,7 @@ class ToolResult(BaseModel):
     success: bool
     output: Any = None
     error: str | None = None
-    events: list[dict[str, Any]] = []
+    events: list[dict[str, Any]] = Field(default_factory=list)
 
 
 class Tool(ABC):
