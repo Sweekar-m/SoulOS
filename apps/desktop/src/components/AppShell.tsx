@@ -6,7 +6,7 @@ import { ModelSelector } from "./ModelSelector";
 import { Settings } from "./Settings";
 import { Sidebar } from "./Sidebar";
 import { SystemStatus } from "./SystemStatus";
-import { ToolActivity } from "./ToolActivity";
+import { ToolActivity, type ToolActivityEvent } from "./ToolActivity";
 import { useChat } from "../hooks/useChat";
 import { useHealth } from "../hooks/useHealth";
 import { useModels } from "../hooks/useModels";
@@ -28,15 +28,14 @@ export function AppShell() {
   }
 
   function command(id: string) {
-    if (id === "chat") {
-      setActive("Chat");
-      void reset();
-    }
+    if (id === "chat") { setActive("Chat"); void reset(); }
     if (id === "clear") setMessage("");
   }
 
-  const modelNames = models.length ? models : [];
-  const currentModel = selectedModel || modelNames[0]?.model || "";
+  const currentModel = selectedModel || models[0]?.model || "";
+  const toolEvents = (reply?.tool_events ?? []).filter((event): event is ToolActivityEvent =>
+    typeof event.name === "string" && (event.status === "running" || event.status === "completed" || event.status === "failed")
+  );
 
   return (
     <main className="shell">
@@ -46,20 +45,16 @@ export function AppShell() {
           <div><span className="eyebrow">DESKTOP AGENT</span><h1>{active === "Chat" ? "What can I do for you?" : active}</h1></div>
           <SystemStatus health={health} error={healthError} />
         </header>
-        {active === "Chat" && (
-          <>
-            <ModelSelector model={currentModel} models={models} onChange={setSelectedModel} />
-            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-              <ChatView history={history} error={error} busy={busy} />
-            </motion.div>
-            <ToolActivity events={(reply?.tool_events ?? []) as never[]} />
-            <form className="composer" onSubmit={submit}>
-              <textarea value={message} onChange={(event) => setMessage(event.target.value)} placeholder="Ask SoulOS anything…" disabled={busy} />
-              <button disabled={!message.trim() || busy}>{busy ? "Thinking…" : "Send"}</button>
-            </form>
-          </>
-        )}
-        {active === "Tools" && <ToolActivity events={(reply?.tool_events ?? []) as never[]} />}
+        {active === "Chat" && <>
+          <ModelSelector model={currentModel} models={models} onChange={setSelectedModel} />
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}><ChatView history={history} error={error} busy={busy} /></motion.div>
+          <ToolActivity events={toolEvents} />
+          <form className="composer" onSubmit={submit}>
+            <textarea value={message} onChange={(event) => setMessage(event.target.value)} placeholder="Ask SoulOS anything…" disabled={busy} />
+            <button disabled={!message.trim() || busy}>{busy ? "Thinking…" : "Send"}</button>
+          </form>
+        </>}
+        {active === "Tools" && <ToolActivity events={toolEvents} />}
         {active === "Memory" && <section className="panel"><div className="panel-title">Memory</div><p>Session memory is managed by the local FastAPI service.</p></section>}
         {active === "Settings" && <Settings apiUrl={apiUrl} onApiUrlChange={setApiUrl} />}
       </section>
