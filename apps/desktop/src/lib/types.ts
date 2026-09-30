@@ -4,6 +4,15 @@ export type Health = {
   version: string;
 };
 
+export type ModelInfo = {
+  provider: string;
+  model: string;
+  role: string;
+  intent?: string | null;
+};
+
+export type ModelCatalog = { models: ModelInfo[] };
+
 export type ChatResponse = {
   session_id: string;
   intent: string;
