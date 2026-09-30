@@ -6,10 +6,11 @@ import { ModelSelector } from "./ModelSelector";
 import { Settings } from "./Settings";
 import { Sidebar } from "./Sidebar";
 import { SystemStatus } from "./SystemStatus";
-import { ToolActivity, type ToolActivityEvent } from "./ToolActivity";
+import { ToolActivity } from "./ToolActivity";
 import { useChat } from "../hooks/useChat";
 import { useHealth } from "../hooks/useHealth";
 import { useModels } from "../hooks/useModels";
+import { normalizeToolEvents } from "../lib/toolEvents";
 
 export function AppShell() {
   const [active, setActive] = useState<"Chat" | "Tools" | "Memory" | "Settings">("Chat");
@@ -33,9 +34,7 @@ export function AppShell() {
   }
 
   const currentModel = selectedModel || models[0]?.model || "";
-  const toolEvents = (reply?.tool_events ?? []).filter((event): event is ToolActivityEvent =>
-    typeof event.name === "string" && (event.status === "running" || event.status === "completed" || event.status === "failed")
-  );
+  const toolEvents = normalizeToolEvents(reply?.tool_events ?? []);
 
   return (
     <main className="shell">
