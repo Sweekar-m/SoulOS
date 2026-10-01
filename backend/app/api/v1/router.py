@@ -11,6 +11,7 @@ from backend.app.api.v1.sessions import router as sessions_router
 from backend.app.api.v1.system import router as system_router
 from backend.app.api.v1.tools import router as tools_router
 from backend.app.core.config import settings
+from backend.app.core.health import readiness
 from backend.app.llm.models import ModelHealth
 from backend.app.llm.nim_client import NimClient
 
@@ -32,8 +33,18 @@ _nim_client = NimClient()
 
 
 @router.get("/health", tags=["system"])
-def health() -> dict[str, str]:
-    return {"status": "ok", "service": "souls-backend", "version": settings.version}
+def health() -> dict:
+    service = readiness()[0]
+    return {"status": service.status, "service": service.name, "version": settings.version}
+
+
+@router.get("/ready", tags=["system"])
+def ready() -> dict:
+    services = readiness()
+    return {
+        "status": "ready" if all(item.status == "ok" for item in services) else "degraded",
+        "services": [item.__dict__ for item in services],
+    }
 
 
 @router.get("/models", response_model=ModelCatalog, tags=["models"])
