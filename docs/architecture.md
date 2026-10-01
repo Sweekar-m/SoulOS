@@ -15,14 +15,10 @@ flowchart LR
   API --> CONVERSATION[Conversation History]
 ```
 
+The API boundary adds a generated or client-supplied `X-Request-ID` to every HTTP response. This gives the desktop shell a stable correlation key for failures and tool activity.
+
 The safety boundary is intentional: raw model output is never treated as an operating-system command. Tools are registered explicitly, arguments are validated with Pydantic, and destructive tools require confirmation.
 
 Conversation history is scoped to a session and is used to provide recent conversational context to generation. The service currently keeps this state in process memory, so persistence beyond a backend restart is intentionally not yet part of the runtime contract.
 
-The desktop client uses `VITE_SOULOS_API_URL` for the local service URL. NVIDIA credentials remain environment-only and are never returned by model or health endpoints.
-
-## Development
-
-Backend: `pip install -r requirements.txt` and run `uvicorn backend.app.main:app --reload`.
-
-Desktop: `cd apps/desktop`, then `npm install` and `npm run dev`. Use `npm run build` for a production frontend check and `npm test` for Vitest.
+Desktop development origins are controlled by `SOULOS_CORS_ORIGINS`. The desktop client uses `VITE_SOULOS_API_URL` for the local service URL. NVIDIA credentials remain environment-only and are never returned by model or health endpoints.
