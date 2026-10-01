@@ -10,6 +10,7 @@ SoulOS is a cross-platform AI desktop application built around Tauri 2, React/Ty
 - NVIDIA NIM — primary generation gateway
 - Typed tool registry — validated, observable, confirmation-aware execution
 - Local memory/session services — desktop-friendly state without mandatory external infrastructure
+- Request IDs — every HTTP response exposes `X-Request-ID` for correlation
 
 ## Development
 
@@ -35,6 +36,8 @@ python -m pytest backend/tests -q
 cd apps/desktop && npm run build && npm test
 ```
 
-The desktop client defaults to `http://127.0.0.1:8000/api/v1` and can be configured with `VITE_SOULOS_API_URL`. NVIDIA NIM credentials are environment-only.
+The desktop client defaults to `http://127.0.0.1:8000/api/v1` and can be configured with `VITE_SOULOS_API_URL`. Desktop CORS origins can be configured with `SOULOS_CORS_ORIGINS`. NVIDIA NIM credentials are environment-only.
+
+Runtime diagnostics are available through `/api/v1/health`, `/api/v1/ready`, and `/api/v1/meta`.
 
 See `docs/architecture.md`, `docs/api-reference.md`, and `docs/intent-routing.md` for the current implementation contracts.
