@@ -47,6 +47,11 @@ def ready() -> dict:
     }
 
 
+@router.get("/meta", tags=["system"])
+def metadata() -> dict[str, str]:
+    return {"name": "SoulOS Backend", "version": settings.version, "api": "v1"}
+
+
 @router.get("/models", response_model=ModelCatalog, tags=["models"])
 def list_models() -> ModelCatalog:
     models: list[ModelInfo] = []
