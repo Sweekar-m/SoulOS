@@ -5,6 +5,8 @@ All application routes are versioned under `/api/v1`.
 | Route | Purpose |
 |---|---|
 | `GET /health` | Backend health and version |
+| `GET /ready` | Runtime readiness summary |
+| `GET /meta` | Runtime name, version, and API generation |
 | `GET /models` | Configured model metadata without credentials |
 | `GET /models/health` | NVIDIA NIM availability |
 | `POST /intents` | Classify a natural-language command |
@@ -19,4 +21,8 @@ All application routes are versioned under `/api/v1`.
 | `DELETE /conversations/{session_id}` | Clear conversation history |
 | `POST /chat` | Run intent → routing → generation orchestration and persist the conversation |
 
-Conversation history is local to the running service and is scoped by session ID. Tool execution is schema-validated and destructive tools require explicit confirmation. Provider credentials are configuration-only and are not returned by API responses.
+Every HTTP response receives an `X-Request-ID` header. Clients may provide their own request ID for distributed debugging; otherwise SoulOS generates one.
+
+The desktop development origins are configurable through `SOULOS_CORS_ORIGINS`, a comma-separated environment variable. NVIDIA credentials are configuration-only and are not returned by API responses.
+
+Conversation history is local to the running service and is scoped by session ID. Tool execution is schema-validated and destructive tools require explicit confirmation.
