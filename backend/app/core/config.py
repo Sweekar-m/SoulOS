@@ -17,6 +17,13 @@ def _int_env(name: str, default: int) -> int:
         return default
 
 
+def _list_env(name: str, default: tuple[str, ...]) -> tuple[str, ...]:
+    raw = os.getenv(name, "").strip()
+    if not raw:
+        return default
+    return tuple(item.strip() for item in raw.split(",") if item.strip())
+
+
 def _specialist_models() -> dict[str, str]:
     raw = os.getenv("NVIDIA_NIM_SPECIALIST_MODELS", "").strip()
     if not raw:
@@ -38,6 +45,7 @@ def _specialist_models() -> dict[str, str]:
 class Settings:
     version: str = "0.1.0"
     api_base_url: str = "http://127.0.0.1:8000"
+    cors_origins: tuple[str, ...] = ("http://localhost:1420", "http://127.0.0.1:1420")
     nim_base_url: str = "https://integrate.api.nvidia.com/v1"
     nim_api_key: str = ""
     nim_model: str = ""
@@ -50,12 +58,9 @@ class Settings:
     def from_env(cls) -> "Settings":
         return cls(
             version=os.getenv("SOULOS_VERSION", "0.1.0"),
-            api_base_url=os.getenv(
-                "SOULOS_API_BASE_URL", "http://127.0.0.1:8000"
-            ),
-            nim_base_url=os.getenv(
-                "NVIDIA_NIM_BASE_URL", "https://integrate.api.nvidia.com/v1"
-            ),
+            api_base_url=os.getenv("SOULOS_API_BASE_URL", "http://127.0.0.1:8000"),
+            cors_origins=_list_env("SOULOS_CORS_ORIGINS", ("http://localhost:1420", "http://127.0.0.1:1420")),
+            nim_base_url=os.getenv("NVIDIA_NIM_BASE_URL", "https://integrate.api.nvidia.com/v1"),
             nim_api_key=os.getenv("NVIDIA_NIM_API_KEY", ""),
             nim_model=os.getenv("NVIDIA_NIM_MODEL", ""),
             nim_timeout_seconds=_float_env("NVIDIA_NIM_TIMEOUT_SECONDS", 30.0),
