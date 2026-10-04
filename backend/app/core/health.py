@@ -14,7 +14,7 @@ def backend_health() -> ServiceHealth:
     return ServiceHealth(
         name="soulos-backend",
         status="ok",
-        detail=f"version={settings.version}",
+        detail=f"version={settings.version};environment={settings.environment}",
     )
 
 
