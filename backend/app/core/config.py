@@ -44,6 +44,7 @@ def _specialist_models() -> dict[str, str]:
 @dataclass(frozen=True)
 class Settings:
     version: str = "0.1.0"
+    environment: str = "development"
     api_base_url: str = "http://127.0.0.1:8000"
     cors_origins: tuple[str, ...] = ("http://localhost:1420", "http://127.0.0.1:1420")
     nim_base_url: str = "https://integrate.api.nvidia.com/v1"
@@ -58,6 +59,7 @@ class Settings:
     def from_env(cls) -> "Settings":
         return cls(
             version=os.getenv("SOULOS_VERSION", "0.1.0"),
+            environment=os.getenv("SOULOS_ENVIRONMENT", "development"),
             api_base_url=os.getenv("SOULOS_API_BASE_URL", "http://127.0.0.1:8000"),
             cors_origins=_list_env("SOULOS_CORS_ORIGINS", ("http://localhost:1420", "http://127.0.0.1:1420")),
             nim_base_url=os.getenv("NVIDIA_NIM_BASE_URL", "https://integrate.api.nvidia.com/v1"),
