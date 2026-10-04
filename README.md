@@ -1,6 +1,6 @@
 # soulOS
 
-SoulOS is a cross-platform AI desktop application built around Tauri 2, React/TypeScript, and a local FastAPI orchestration service. The desktop shell owns native integration while the backend handles intent routing, NVIDIA NIM generation, explicit tool execution, memory, and sessions.
+SoulOS is a cross-platform AI desktop application built around Tauri 2, React/TypeScript, and a local FastAPI orchestration service. The desktop shell owns native integration while the backend handles intent routing, NVIDIA NIM generation, explicit tool execution, memory, sessions, and conversation history.
 
 ## Architecture
 
@@ -11,6 +11,7 @@ SoulOS is a cross-platform AI desktop application built around Tauri 2, React/Ty
 - Typed tool registry — validated, observable, confirmation-aware execution
 - Local memory/session services — desktop-friendly state without mandatory external infrastructure
 - Request IDs — every HTTP response exposes `X-Request-ID` for correlation
+- Runtime diagnostics — safe environment, model-count, and readiness visibility without secrets
 
 ## Development
 
@@ -32,12 +33,13 @@ npm run dev
 Checks:
 
 ```bash
+python -m compileall -q backend
 python -m pytest backend/tests -q
 cd apps/desktop && npm run build && npm test
 ```
 
-The desktop client defaults to `http://127.0.0.1:8000/api/v1` and can be configured with `VITE_SOULOS_API_URL`. Desktop CORS origins can be configured with `SOULOS_CORS_ORIGINS`. NVIDIA NIM credentials are environment-only.
+The desktop client defaults to `http://127.0.0.1:8000/api/v1` and can be configured with `VITE_SOULOS_API_URL`. Desktop CORS origins can be configured with `SOULOS_CORS_ORIGINS`. `SOULOS_ENVIRONMENT` identifies the runtime environment. NVIDIA NIM credentials are environment-only.
 
-Runtime diagnostics are available through `/api/v1/health`, `/api/v1/ready`, and `/api/v1/meta`.
+Runtime diagnostics are available through `/api/v1/health`, `/api/v1/ready`, `/api/v1/meta`, and `/api/v1/diagnostics`. The diagnostics endpoint deliberately excludes API credentials.
 
 See `docs/architecture.md`, `docs/api-reference.md`, and `docs/intent-routing.md` for the current implementation contracts.
