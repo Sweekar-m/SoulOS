@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 from backend.app.api.v1.chat import router as chat_router
 from backend.app.api.v1.conversations import router as conversations_router
+from backend.app.api.v1.diagnostics import router as diagnostics_router
 from backend.app.api.v1.generate import router as generate_router
 from backend.app.api.v1.intents import router as intents_router
 from backend.app.api.v1.memory import router as memory_router
@@ -77,3 +78,4 @@ router.include_router(chat_router)
 router.include_router(search_router)
 router.include_router(generate_router)
 router.include_router(system_router)
+router.include_router(diagnostics_router)
