@@ -21,6 +21,6 @@ def test_documented_api_routes_are_registered() -> None:
         "/api/v1/conversations/{session_id}/messages",
         "/api/v1/chat",
         "/api/v1/search",
-        "/api/v1/generate",
+        "/api/v1/generate/presentation",
     }
     assert expected <= routes
